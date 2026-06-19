@@ -4,6 +4,10 @@
 
 [![npm version](https://img.shields.io/npm/v/@timywel/baize-ui-dsl.svg)](https://www.npmjs.com/package/@timywel/baize-ui-dsl)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Live Demo](https://img.shields.io/badge/demo-timywel.github.io-blue)](https://timywel.github.io/baize-ui-dsl/)
+[![GitHub](https://img.shields.io/badge/github-timywel%2Fbaize--ui--dsl-green)](https://github.com/timywel/baize-ui-dsl)
+
+**🌐 在线预览**：https://timywel.github.io/baize-ui-dsl/
 
 [English README](./README.md) | 中文文档
 
