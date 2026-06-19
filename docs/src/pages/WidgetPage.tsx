@@ -70,11 +70,33 @@ export default function WidgetPage({ widgetMeta }: WidgetPageProps) {
         </div>
       </section>
 
+      {/* 在主区顶部加 sticky in-page nav: 锚点跳到各示例 */}
+      {examples.length > 1 && (
+        <div className="in-page-nav" aria-label="本页示例">
+          {examples.map((ex, idx) => (
+            <a
+              key={`nav-${idx}`}
+              href={`#example-${idx}`}
+              className="in-page-nav-link"
+            >
+              示例 {idx + 1}
+            </a>
+          ))}
+          <a href="#api" className="in-page-nav-link">
+            API 字段
+          </a>
+        </div>
+      )}
+
       {examples.map((ex, idx) => (
-        <section key={`${meta.type}-${idx}`} style={{ marginBottom: "2.5rem" }}>
-          <h3 style={{ fontSize: "1.125rem", margin: "0 0 0.75rem" }}>
+        <section
+          key={`${meta.type}-${idx}`}
+          id={`example-${idx}`}
+          style={{ marginBottom: "2.5rem", scrollMarginTop: "72px" }}
+        >
+          <h2 style={{ fontSize: "1.5rem", fontWeight: 600, margin: "0 0 0.75rem", letterSpacing: "-0.015em" }}>
             示例 {idx + 1}: {ex.title}
-          </h3>
+          </h2>
           {ex.description && (
             <p
               style={{
@@ -115,7 +137,12 @@ export default function WidgetPage({ widgetMeta }: WidgetPageProps) {
         </section>
       ))}
 
-      <div ref={apiTableRef.ref} className="reveal-up">
+      <div
+        id="api"
+        ref={apiTableRef.ref}
+        className="reveal-up"
+        style={{ scrollMarginTop: "72px" }}
+      >
         <ApiTable title="Props / Schema 字段" fields={getApiForWidget(meta.type)} />
       </div>
     </>

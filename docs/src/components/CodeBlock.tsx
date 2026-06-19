@@ -1,5 +1,5 @@
 /**
- * CodeBlock — 代码块组件 (element-plus 风格)
+ * CodeBlock — 代码块组件
  *
  * 特性:
  * - 顶部 Tab 切换 (JSON DSL / TS 类型签名 / 预览) — 可选

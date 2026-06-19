@@ -13,7 +13,7 @@
 
 ## 📸 预览
 
-**展示站风格对标 [element-plus.org](https://element-plus.org/) + [vant.pro](https://vant.pro/vant/)** —— 左导航 + 顶部 tab + 实时 Playground + 代码块复制。
+**自建文档站架构** — 左导航（widget 按数据展示 / 数据可视化 / 结构组织 / 反馈与状态 4 个 category 分组）+ 顶部 tab（指南 / 组件 / Playground / 集成）+ 实时 Playground JSON DSL 编辑器 + 代码块一键复制 + API 字段表格 + 右侧 sticky 目录。所有组件 100% 自实现，零外部库依赖（除 React + Tailwind）。
 
 ### 本地预览
 

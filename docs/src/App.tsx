@@ -51,7 +51,7 @@ export default function App() {
     <ThemeProvider mode={theme}>
       <I18nProvider t={t} locale={locale}>
         <div className="app-layout">
-          {/* 顶部导航 (element-plus 风) */}
+          {/* 顶部导航 */}
           <header className="top-nav">
             <div className="top-nav-inner">
               <Link to="/" className="top-nav-logo">

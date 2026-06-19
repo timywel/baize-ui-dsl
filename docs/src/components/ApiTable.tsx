@@ -1,5 +1,5 @@
 /**
- * ApiTable — 组件 API 文档表格 (element-plus / antd 风格)
+ * ApiTable — 组件 API 文档表格
  *
  * 列: Name | Description | Type | Default | Required
  */
