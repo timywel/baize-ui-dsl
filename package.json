@@ -67,7 +67,7 @@
     "format": "prettier --write \"src/**/*.{ts,tsx,css}\" \"tests/**/*.{ts,tsx}\" \"docs/src/**/*.{ts,tsx,css}\"",
     "preview": "vite preview",
     "prepare": "npm run build:lib",
-    "deploy:docs": "cd docs && pnpm build && cd dist && git init -b gh-pages && git add -A && git -c user.email=timywel@163.com -c user.name=timywel commit -m \"deploy: docs build\" && git remote add origin https://github.com/timywel/baize-ui-dsl.git 2>/dev/null; git push -f origin gh-pages"
+    "deploy:docs": "cd docs && pnpm build && cd dist && git init -b gh-pages && git add -A && git -c user.email=timywel@163.com -c user.name=timywel commit -m \"deploy: docs build\" && git remote add origin \"https://$(gh auth token):x-oauth-basic@github.com/timywel/baize-ui-dsl.git\" 2>/dev/null; git push -f origin gh-pages"
   },
   "peerDependencies": {
     "react": ">=18.0.0",
