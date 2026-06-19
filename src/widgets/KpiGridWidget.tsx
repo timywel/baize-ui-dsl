@@ -3,6 +3,8 @@
  *
  * 适用: 数据看板、运营报表、电商 dashboard 等.
  * 样式参考 B 站 TokUI 全行业场景演示 (BV1ZajV61EUX).
+ *
+ * dense mode 用于嵌入在 hero 等紧凑区域.
  */
 
 import { memo } from "react";
@@ -12,14 +14,17 @@ import { useCountUp } from "./useCountUp.js";
 
 export interface KpiGridWidgetProps {
   readonly dsl: KpiGridBlock;
+  readonly dense?: boolean;
 }
 
 function DeltaIndicator({
   direction,
   value,
+  dense = false,
 }: {
   readonly direction: Direction;
   readonly value: number;
+  readonly dense?: boolean;
 }) {
   const color =
     direction === "up"
@@ -30,7 +35,9 @@ function DeltaIndicator({
   const arrow = direction === "up" ? "↑" : direction === "down" ? "↓" : "—";
   return (
     <span
-      className="text-[13px] font-medium ml-1.5 inline-flex items-baseline gap-0.5"
+      className={`font-medium ml-1 inline-flex items-baseline gap-0.5 ${
+        dense ? "text-[10px]" : "text-[13px]"
+      }`}
       style={{ color }}
     >
       <span aria-hidden="true">{arrow}</span>
@@ -39,8 +46,14 @@ function DeltaIndicator({
   );
 }
 
-function KpiCard({ item }: { readonly item: KpiItem }) {
-  // 数字 count-up 动画 (默认 800ms)
+function KpiCard({
+  item,
+  dense = false,
+}: {
+  readonly item: KpiItem;
+  readonly dense?: boolean;
+}) {
+  // 数字 count-up 动画 (默认 700ms)
   const targetValue = typeof item.value === "number" ? item.value : Number(item.value);
   const isFinite = Number.isFinite(targetValue);
   const animatedValue = useCountUp(isFinite ? targetValue : 0, {
@@ -55,36 +68,54 @@ function KpiCard({ item }: { readonly item: KpiItem }) {
 
   return (
     <div
-      className="flex flex-col gap-1.5 p-4 rounded-xl border bg-[var(--baize-bg-card,#fff)] border-[color:var(--baize-border-primary,#e5e7eb)] transition-shadow hover:shadow-sm baize-widget-fade-in"
-      style={{ minHeight: 92 }}
+      className="flex flex-col gap-1.5 rounded-xl border baize-widget-fade-in"
+      style={{
+        padding: dense ? "8px 10px" : "var(--space-4)",
+        background: "var(--baize-bg-card,#fff)",
+        borderColor: "var(--baize-border-primary,#e5e7eb)",
+        minHeight: dense ? 64 : 92,
+      }}
     >
       <div
-        className="text-xs font-medium"
-        style={{ color: "var(--baize-text-secondary, #6b7280)" }}
+        className="font-medium"
+        style={{
+          fontSize: dense ? 11 : 12,
+          color: "var(--baize-text-secondary, #6b7280)",
+        }}
       >
         {item.label}
       </div>
       <div className="flex items-baseline min-w-0">
         {item.unit && (
           <span
-            className="text-[15px] mr-0.5 font-light"
-            style={{ color: "var(--baize-text-muted, #9ca3af)" }}
+            className="mr-0.5 font-light"
+            style={{
+              fontSize: dense ? 11 : 15,
+              color: "var(--baize-text-muted, #9ca3af)",
+            }}
           >
             {item.unit}
           </span>
         )}
         <span
-          className="text-[28px] leading-none font-light tabular-nums truncate"
-          style={{ color: "var(--baize-text-primary, #111827)", letterSpacing: "-0.02em" }}
+          className="leading-none font-light tabular-nums truncate"
+          style={{
+            color: "var(--baize-text-primary, #111827)",
+            letterSpacing: "-0.02em",
+            fontSize: dense ? "16px" : "28px",
+          }}
         >
           {displayValue}
         </span>
-        {item.delta && <DeltaIndicator {...item.delta} />}
+        {item.delta && <DeltaIndicator {...item.delta} dense={dense} />}
       </div>
       {item.caption && (
         <div
-          className="text-[10px] mt-0.5 truncate"
-          style={{ color: "var(--baize-text-muted, #9ca3af)" }}
+          className="mt-0.5 truncate"
+          style={{
+            fontSize: 10,
+            color: "var(--baize-text-muted, #9ca3af)",
+          }}
         >
           {item.caption}
         </div>
@@ -94,7 +125,6 @@ function KpiCard({ item }: { readonly item: KpiItem }) {
 }
 
 function layoutToGridCols(layout: string): string {
-  // 不依赖 sm:/lg: 断点 / 也不依赖 Tailwind —— widget 应在自己内部就横排
   switch (layout) {
     case "1x2":
       return "repeat(2, minmax(0, 1fr))";
@@ -109,18 +139,18 @@ function layoutToGridCols(layout: string): string {
   }
 }
 
-function KpiGridWidgetImpl({ dsl }: KpiGridWidgetProps) {
+function KpiGridWidgetImpl({ dsl, dense }: KpiGridWidgetProps) {
   return (
     <figure className="my-4" role="group" aria-label={dsl.caption ?? "KPI 网格"}>
       <div
         style={{
           display: "grid",
           gridTemplateColumns: layoutToGridCols(dsl.layout),
-          gap: "0.75rem",
+          gap: dense ? "8px" : "0.75rem",
         }}
       >
         {dsl.items.map((item, i) => (
-          <KpiCard key={`${item.label}-${i}`} item={item} />
+          <KpiCard key={`${item.label}-${i}`} item={item} {...(dense ? { dense: true } : {})} />
         ))}
       </div>
       {dsl.caption && (
