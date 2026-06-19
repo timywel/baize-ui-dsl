@@ -589,17 +589,17 @@ a:hover { color: var(--accent-700); }
   flex-shrink: 0;
 }
 
-/* ── Main content: 720px 阅读宽度 + breakout ── */
+/* ── Main content: 880px 阅读宽度 (含代码块) + breakout ── */
 .main-content {
   flex: 1;
   min-width: 0;
-  padding: var(--space-12) var(--space-12) var(--space-24);
-  max-width: 760px;
+  padding: var(--space-12) var(--space-10) var(--space-24);
+  max-width: 880px;
   margin: 0 auto;
   width: 100%;
 }
 
-/* Breakout: 代码块 / 表格 / API 表格可突破 720px 限制 */
+/* Breakout: 代码块 / 表格 / API 表格可突破 880px 限制 */
 .main-content > .demo-card,
 .main-content > pre,
 .main-content > table,
@@ -613,7 +613,7 @@ a:hover { color: var(--accent-700); }
   display: none;
   width: 220px;
   flex-shrink: 0;
-  padding: var(--space-12) var(--space-8) 0;
+  padding: var(--space-12) var(--space-6) 0;
   position: sticky;
   top: 56px;
   height: calc(100vh - 56px);
@@ -623,21 +623,218 @@ a:hover { color: var(--accent-700); }
   .right-toc { display: block; }
 }
 
-/* ── 主区响应式 ── */
-@media (max-width: 900px) {
-  .top-nav-tabs { display: none; }
-  .mobile-only { display: inline-flex; }
-  .mobile-nav-dropdown { display: flex; }
-  .sidebar { display: none; }
-  .main-content { padding: var(--space-6); }
-  .playground-grid { grid-template-columns: 1fr; }
-  .hero { padding: var(--space-12) var(--space-4); }
-  .hero-split { grid-template-columns: 1fr; gap: var(--space-8); }
-  .hero h1 { font-size: 36px; line-height: 40px; }
+.right-toc-title {
+  font-size: var(--text-micro);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-label);
+  color: var(--fg-tertiary);
+  margin-bottom: var(--space-3);
+  padding-left: var(--space-3);
 }
-@media (max-width: 480px) {
-  .top-nav-inner { padding: 0 var(--space-4); gap: var(--space-4); }
+.right-toc-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  border-left: 1px solid var(--border-subtle);
+}
+.right-toc-item {
+  position: relative;
+}
+.right-toc-item a {
+  display: block;
+  padding: 6px var(--space-3);
+  font-size: var(--text-body-sm);
+  color: var(--fg-tertiary);
+  text-decoration: none;
+  transition: color var(--duration-fast) var(--ease-standard);
+  line-height: 1.5;
+}
+.right-toc-item a:hover { color: var(--fg-primary); }
+.right-toc-item.active a {
+  color: var(--accent-600);
+  font-weight: 500;
+}
+.right-toc-item.active::before {
+  content: "";
+  position: absolute;
+  left: -1px;
+  top: 4px;
+  bottom: 4px;
+  width: 2px;
+  background: var(--accent-600);
+  border-radius: 1px;
+}
+.right-toc-item.level-3 a { padding-left: var(--space-6); font-size: 12px; }
+
+/* ═══════════════════════════════════════════════════════════════════
+ *  5.5 响应式断点 (mobile-first)
+ *  ─ sm  640  ── tablet portrait
+ *  ─ md  768  ── tablet landscape
+ *  ─ lg  1024 ── laptop
+ *  ─ xl  1280 ── desktop + 右 TOC
+ * ═══════════════════════════════════════════════════════════════════ */
+
+/* 移动端 (≤ 640) — hero stack, KPI 2x2, 紧凑 padding */
+@media (max-width: 640px) {
+  .top-nav-inner {
+    padding: 0 var(--space-4);
+    gap: var(--space-2);
+  }
+  .top-nav-tabs { display: none; }
+  .top-nav-icon-btn { display: inline-flex !important; }
+  .mobile-only { display: inline-flex; }
   .logo-version { display: none; }
+  .logo-text { display: none; }
+  .mobile-nav-dropdown { display: flex; }
+
+  .app-body { flex-direction: column; }
+  .sidebar { display: none; }
+  .right-toc { display: none; }
+
+  .main-content {
+    padding: var(--space-4);
+    max-width: 100%;
+  }
+
+  /* hero: stack 上下 + 缩小 hero padding — !important 避免被后面覆盖 */
+  .hero {
+    padding: var(--space-8) var(--space-4) !important;
+    margin-bottom: var(--space-10);
+    border-radius: var(--radius-xl);
+  }
+  .hero-split {
+    grid-template-columns: 1fr !important;
+    gap: var(--space-6) !important;
+  }
+  .hero h1 {
+    font-size: var(--text-h2) !important;
+    line-height: 40px;
+    letter-spacing: -0.02em;
+  }
+  .hero p.lede {
+    font-size: var(--text-body);
+    line-height: var(--lh-body);
+  }
+  .hero-badge {
+    font-size: 10px;
+    padding: 2px var(--space-2);
+    white-space: nowrap;
+  }
+  .hero-cta { width: 100%; }
+  .hero-cta .btn { flex: 1; min-width: 0; }
+
+  /* hero demo: desktop 隐藏, mobile 显示 + 占满宽度 */
+  .hero-demo-desktop { display: none !important; }
+  .hero-demo-mobile {
+    display: flex !important;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+  .hero-right { width: 100% !important; min-width: 0 !important; }
+  .hero-demo { padding: var(--space-4); width: 100%; }
+
+  /* 移动端 KPI 1x2 → 1x1 (纵向 stack) */
+  .hero-demo-mobile figure > div[style*="grid-template-columns"] {
+    grid-template-columns: 1fr !important;
+    gap: 8px !important;
+  }
+
+  /* hero 动画去 stagger, 移动端不需要 */
+  .hero-demo .baize-widget-fade-in {
+    animation-delay: 0ms !important;
+  }
+
+  /* page header 缩小 */
+  .page-header { margin-bottom: var(--space-5); padding-bottom: var(--space-3); }
+  .page-header h1 { font-size: var(--text-h2); }
+
+  /* 对比表横向滚动 */
+  .compare-table { overflow-x: auto; }
+  .compare-table table { min-width: 480px; }
+
+  /* API table */
+  .api-table-wrapper { overflow-x: auto; }
+  .api-table-wrapper table { min-width: 540px; }
+
+  /* code block */
+  .shiki-container {
+    font-size: 11px;
+    padding: var(--space-3);
+  }
+
+  /* demo card */
+  .demo-card { padding: var(--space-4); }
+
+  /* feature card grid: 1 列 */
+  .feature-grid {
+    grid-template-columns: 1fr !important;
+    gap: var(--space-3);
+  }
+
+  /* 按钮组: 移动端可堆叠 */
+  .playground-grid {
+    grid-template-columns: 1fr !important;
+    gap: var(--space-3);
+  }
+  .playground-textarea, .playground-output { min-height: 240px; }
+
+  /* 移动端禁用 hover lift (没意义且耗性能) */
+  .feature-card:hover { transform: none; }
+}
+
+/* 平板 portrait (641-768) — hero stack + sidebar 仍隐藏 */
+@media (min-width: 641px) and (max-width: 768px) {
+  .sidebar { display: none; }
+  .right-toc { display: none; }
+  .hero-split { grid-template-columns: 1fr !important; gap: var(--space-8) !important; }
+  .hero h1 { font-size: var(--text-display-lg) !important; }
+  .feature-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* 平板 landscape (769-1024) — sidebar 仍隐藏, hero 改 1:1 */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .sidebar { display: none; }
+  .right-toc { display: none; }
+  .hero-split { grid-template-columns: 1fr 1fr !important; gap: var(--space-8) !important; }
+  .hero h1 { font-size: var(--text-h1) !important; }
+  .feature-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* 桌面 (1025-1280) — sidebar 显示 (240px), 右 TOC 隐藏 */
+@media (min-width: 1025px) and (max-width: 1280px) {
+  .sidebar { display: block; width: 240px; }
+  .right-toc { display: none; }
+}
+
+/* 大屏 (≥ 1280) — sidebar (260px) + 右 TOC (220px) */
+@media (min-width: 1280px) {
+  .right-toc { display: block; }
+}
+
+/* 极小屏 (≤ 380) — iPhone SE */
+@media (max-width: 380px) {
+  .top-nav-actions { gap: 0; }
+  .top-nav-icon-btn { width: 28px; height: 28px; }
+  .hero { padding: var(--space-6) var(--space-3) !important; }
+  .hero h1 { font-size: 28px !important; line-height: 36px; }
+  .main-content { padding: var(--space-3); }
+}
+
+/* ── 横屏 (landscape) 移动端 / 平板 — hero 高度限制 ── */
+@media (max-height: 500px) and (orientation: landscape) {
+  .hero { padding: var(--space-6) !important; }
+  .hero h1 { font-size: var(--text-h3) !important; }
+  .hero p.lede { display: none; }
+  .hero-cta { margin-top: var(--space-3); }
+}
+
+/* 触摸设备优化: 增大 hit target */
+@media (hover: none) and (pointer: coarse) {
+  .top-nav-icon-btn { width: 40px; height: 40px; }
+  .top-nav-tab { padding: var(--space-3); min-height: 44px; }
+  .sidebar-nav li a { padding: 10px var(--space-6) 10px var(--space-5); }
+  .btn { min-height: 44px; }
 }
 
 /* ═══════════════════════════════════════════════════════════════════
@@ -707,6 +904,7 @@ a:hover { color: var(--accent-700); }
   position: relative;
   border-radius: var(--radius-xl);
   overflow: hidden;
+  min-width: 0;
 }
 
 .hero-badge {
@@ -767,6 +965,39 @@ a:hover { color: var(--accent-700); }
   font-size: var(--text-caption);
   color: var(--fg-tertiary);
   font-variant-numeric: tabular-nums;
+}
+
+/* Default: 桌面显示 desktop, 移动端隐藏 */
+.hero-demo-desktop { display: flex; flex-direction: column; gap: var(--space-3); }
+.hero-demo-mobile { display: none; }
+
+@media (max-width: 640px) {
+  .hero-demo-desktop { display: none; }
+  .hero-demo-mobile { display: flex; flex-direction: column; gap: var(--space-2); }
+
+  /* mobile 上 hero-right 占满整宽, demo 容器宽 */
+  .hero-right {
+    width: 100%;
+    min-width: 0;
+  }
+  .hero-demo {
+    padding: var(--space-4);
+    width: 100%;
+  }
+  .hero-demo .baize-widget-fade-in {
+    /* 关闭 staggered animation, 移动端不需要 */
+    animation-delay: 0ms !important;
+  }
+
+  /* mobile 上 KPI 1x2 改 1x1 (横向 grid → 纵向 stack) */
+  .hero-demo-mobile figure > div[style*="grid-template-columns"] {
+    grid-template-columns: 1fr !important;
+    gap: 8px !important;
+  }
+  /* mobile KPI 数字字号保持 16px (dense 模式已经小) */
+  .hero-demo-mobile figure > div > div > div[style*="font-size: 16px"] {
+    font-size: 18px !important;
+  }
 }
 
 /* Eyebrow (受 4.7 限制: 每 3 section 最多 1 个) */
@@ -1014,3 +1245,67 @@ a:hover { color: var(--accent-700); }
 
 /* ── View Transitions (R8) ── */
 @view-transition { navigation: auto; }
+
+/* View Transition 动画: cross-route morph */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 300ms;
+  animation-timing-function: var(--ease-emphasized);
+}
+
+::view-transition-old(root) {
+  animation-name: fade-out-up;
+}
+::view-transition-new(root) {
+  animation-name: fade-in-up;
+}
+
+@keyframes fade-out-up {
+  to {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+}
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+
+/* ── Scroll-driven reveal animations ── */
+@keyframes reveal-up {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes reveal-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes reveal-scale {
+  from { opacity: 0; transform: scale(0.96); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.reveal-up,
+.reveal-fade,
+.reveal-scale {
+  opacity: 0;
+  will-change: opacity, transform;
+}
+.reveal-up.is-visible { animation: reveal-up 500ms var(--ease-out) both; }
+.reveal-fade.is-visible { animation: reveal-fade 600ms var(--ease-out) both; }
+.reveal-scale.is-visible { animation: reveal-scale 400ms var(--ease-out) both; }
+
+/* 错位: 多个 reveal 元素 stagger 出现 */
+.reveal-stagger > * {
+  opacity: 0;
+}
+.reveal-stagger.is-visible > *:nth-child(1) { animation: reveal-up 500ms var(--ease-out) both 0ms; }
+.reveal-stagger.is-visible > *:nth-child(2) { animation: reveal-up 500ms var(--ease-out) both 80ms; }
+.reveal-stagger.is-visible > *:nth-child(3) { animation: reveal-up 500ms var(--ease-out) both 160ms; }
+.reveal-stagger.is-visible > *:nth-child(4) { animation: reveal-up 500ms var(--ease-out) both 240ms; }
+.reveal-stagger.is-visible > *:nth-child(5) { animation: reveal-up 500ms var(--ease-out) both 320ms; }
+.reveal-stagger.is-visible > *:nth-child(6) { animation: reveal-up 500ms var(--ease-out) both 400ms; }
+.reveal-stagger.is-visible > *:nth-child(7) { animation: reveal-up 500ms var(--ease-out) both 480ms; }
+.reveal-stagger.is-visible > *:nth-child(8) { animation: reveal-up 500ms var(--ease-out) both 560ms; }

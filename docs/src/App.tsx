@@ -1,11 +1,13 @@
 import { NavLink, Routes, Route, Navigate, Link } from "react-router-dom";
 import { ThemeProvider, I18nProvider } from "@timywel/baize-ui-dsl";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Menu, Github, FileText, Sun, Moon, Languages } from "lucide-react";
 import OverviewPage from "./pages/OverviewPage";
 import WidgetPage from "./pages/WidgetPage";
 import PlaygroundPage from "./pages/PlaygroundPage";
 import GuidePage from "./pages/GuidePage";
+import { useViewTransition } from "./hooks/useViewTransition";
+import RightToc from "./components/RightToc";
 import { WIDGET_META, WIDGET_CATEGORIES } from "./widget-meta";
 
 const TOP_NAV = [
@@ -16,6 +18,11 @@ const TOP_NAV = [
 ];
 
 export default function App() {
+  // 路由切换时触发 View Transitions
+  useViewTransition();
+
+  const mainRef = useRef<HTMLElement>(null);
+
   const [theme, setTheme] = useState<"light" | "dark">("light");
   const [locale, setLocale] = useState<"zh-CN" | "en-US">("zh-CN");
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
@@ -212,7 +219,7 @@ export default function App() {
               </ul>
             </aside>
 
-            <main className="main-content">
+            <main className="main-content" ref={mainRef}>
               <Routes>
                 <Route path="/" element={<OverviewPage />} />
                 <Route path="/guide" element={<GuidePage />} />
@@ -224,6 +231,7 @@ export default function App() {
                 <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>
             </main>
+            <RightToc contentRef={mainRef} />
           </div>
         </div>
       </I18nProvider>

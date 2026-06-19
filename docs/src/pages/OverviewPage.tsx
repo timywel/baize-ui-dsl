@@ -8,11 +8,15 @@ import {
 } from "@timywel/baize-ui-dsl";
 import { ArrowRight } from "lucide-react";
 import { WIDGET_META } from "../widget-meta";
+import { useReveal } from "../hooks/useReveal";
 
 export default function OverviewPage() {
+  const widgetsGridRef = useReveal<HTMLDivElement>();
+  const demoCardRef = useReveal<HTMLDivElement>();
+
   return (
     <>
-      {/* ───── HERO: split 50/50 (ANTI-CENTER BIAS) ───── */}
+      {/* ───── HERO: split 5/7 (desktop) → stack (移动端) ───── */}
       <section className="hero hero-split">
         {/* 左侧 — 标题 / 副标题 / CTA */}
         <div className="hero-left">
@@ -34,11 +38,17 @@ export default function OverviewPage() {
           </div>
         </div>
 
-        {/* 右侧 — 实时 dashboard 演示 (替换 chips) */}
+        {/* 右侧 — 实时 dashboard 演示 (移动端隐藏折线图) */}
         <div className="hero-right">
           <div className="hero-demo">
-            <KpiGridWidget dsl={heroKpi} dense />
-            <LineChartWidget dsl={heroTrend} />
+            {/* Desktop: KPI + LineChart; Mobile: only KPI */}
+            <div className="hero-demo-desktop">
+              <KpiGridWidget dsl={heroKpi} dense />
+              <LineChartWidget dsl={heroTrend} />
+            </div>
+            <div className="hero-demo-mobile">
+              <KpiGridWidget dsl={heroKpiMobile} dense />
+            </div>
           </div>
           <div className="hero-caption">
             一句话 prompt → 完整可交互 UI
@@ -87,7 +97,7 @@ export default function OverviewPage() {
         <p>每个 widget 一个独立展示页, 含基础 + 高级示例 + 代码片段 + API 文档</p>
       </section>
 
-      <div className="feature-grid">
+      <div ref={widgetsGridRef.ref} className="feature-grid reveal-stagger">
         {WIDGET_META.map((w) => (
           <Link
             key={w.type}
@@ -110,7 +120,7 @@ export default function OverviewPage() {
         <p>3 个 widget 组合, 一句话指令 → 完整可交互面板</p>
       </section>
 
-      <div className="demo-card">
+      <div ref={demoCardRef.ref} className="demo-card reveal-up">
         <div className="demo-card-title">
           Prompt: "帮我搭一个电商运营数据看板, 要能看到 GMV、订单量、转化率, 再配一张趋势图"
         </div>
@@ -142,6 +152,16 @@ const heroTrend: UiBlockDSL = {
     { label: "周四" }, { label: "周五" }, { label: "周六" },
   ],
   height: 140,
+};
+
+// 移动端用极简单 KPI + chart (避免 1x2 在窄屏挤)
+const heroKpiMobile: UiBlockDSL = {
+  widget: "kpi_grid",
+  layout: "1x2",
+  items: [
+    { label: "GMV", value: 128560, delta: { value: 5.2, direction: "up" } },
+    { label: "订单", value: 3674, delta: { value: 8.1, direction: "up" } },
+  ],
 };
 
 /* ─────────────────────────────────────────────────────────────────

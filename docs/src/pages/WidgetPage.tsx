@@ -5,6 +5,7 @@ import { widgetExamples } from "../widget-examples";
 import CodeBlock, { dslToTypeSignature } from "../components/CodeBlock";
 import ApiTable from "../components/ApiTable";
 import { getApiForWidget } from "../widget-api";
+import { useReveal } from "../hooks/useReveal";
 
 export interface WidgetPageProps {
   readonly widgetMeta: ReadonlyArray<WidgetMeta>;
@@ -14,6 +15,8 @@ export default function WidgetPage({ widgetMeta }: WidgetPageProps) {
   const { widgetType } = useParams<{ widgetType: string }>();
   const meta = widgetMeta.find((w) => w.type === widgetType);
   const examples = widgetType ? widgetExamples[widgetType] ?? [] : [];
+
+  const apiTableRef = useReveal<HTMLDivElement>();
 
   if (!meta) {
     return (
@@ -112,7 +115,9 @@ export default function WidgetPage({ widgetMeta }: WidgetPageProps) {
         </section>
       ))}
 
-      <ApiTable title="Props / Schema 字段" fields={getApiForWidget(meta.type)} />
+      <div ref={apiTableRef.ref} className="reveal-up">
+        <ApiTable title="Props / Schema 字段" fields={getApiForWidget(meta.type)} />
+      </div>
     </>
   );
 }
